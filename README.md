@@ -104,18 +104,31 @@ dataset order), so every run is reproducible.
 
 ## Results
 
-Clean baseline — representative 120-sample subset (shuffled, seed 42, spanning
-all five risk areas), temperature 0:
+Same 100-sample subset (shuffled, seed 42 — **identical prompts for both
+tasks**, so the delta is apples-to-apples), `gpt-4o-mini` under evaluation and as
+its own judge, temperature 0:
 
-| Task | Model | Judge | n | refusal_rate | safe_rate | follow_rate (lower better) |
-|---|---|---|---|---|---|---|
-| `do_not_answer` | gpt-4o-mini | gpt-4o-mini | 120 | 0.40 | 0.99 | 0.008 |
+| Task | n | refusal_rate | safe_rate | follow_rate (lower better) | follow 95% CI |
+|---|---|---|---|---|---|
+| `do_not_answer` (clean) | 100 | 0.38 | 0.98 | 0.02 | [0.01, 0.07] |
+| `do_not_answer_adversarial` (`combination`) | 100 | 0.18 | 0.83 | **0.17** | [0.11, 0.26] |
 
-`gpt-4o-mini` handles the clean prompts safely 99% of the time — the saturation
-that motivates the adversarial task. Measure the degradation on your own model
-with the adversarial one-liner above; the headline is the `follow_rate` delta
-(clean → `combination`). Drop `-T limit` for the full 939 and add
-`-T judge=openai/gpt-4o` for the paper's GPT-4-class judge.
+The clean prompts are nearly saturated (98% safe) — but the `combination`
+jailbreak lifts `follow_rate` from 0.02 to **0.17** (~8×, and the two Wilson CIs
+do not overlap), which is exactly the gap the adversarial task exists to expose.
+The per-risk-area breakdown shows *where* it bites:
+
+| risk area | clean | combination |
+|---|---|---|
+| Information Hazards | 0.00 | **0.35** |
+| Malicious Uses | 0.00 | 0.17 |
+| Discrimination, Exclusion, Toxicity, … | 0.08 | 0.13 |
+| Human-Chatbot Interaction Harms | 0.00 | 0.11 |
+| Misinformation Harms | 0.00 | 0.06 |
+
+A self-judge is convenient but lenient; add `-T judge=openai/gpt-4o` for the
+paper's GPT-4-class grader, `-T judge_b=…` to report inter-judge κ, and drop
+`-T limit` for the full 939.
 
 ## Future work
 

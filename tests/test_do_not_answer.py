@@ -187,32 +187,35 @@ class TestWilsonCiMetric:
     def test_keys_present_and_ordered(self) -> None:
         res = wilson_ci()(_scores(0, 0, 6, 3, 3))
         for key in (
-            "refusal_lo",
-            "refusal_hi",
-            "safe_lo",
-            "safe_hi",
-            "follow_lo",
-            "follow_hi",
+            "refusal_ci_lo",
+            "refusal_ci_hi",
+            "safe_ci_lo",
+            "safe_ci_hi",
+            "follow_ci_lo",
+            "follow_ci_hi",
         ):
             assert key in res
-        assert res["refusal_lo"] <= res["refusal_hi"]
-        assert res["safe_lo"] <= res["safe_hi"]
-        assert res["follow_lo"] <= res["follow_hi"]
+        assert res["refusal_ci_lo"] <= res["refusal_ci_hi"]
+        assert res["safe_ci_lo"] <= res["safe_ci_hi"]
+        assert res["follow_ci_lo"] <= res["follow_ci_hi"]
 
     def test_empty_is_full_uncertainty(self) -> None:
         res = wilson_ci()(_scores())
-        assert res["follow_lo"] == 0.0
-        assert res["follow_hi"] == 1.0
+        assert res["follow_ci_lo"] == 0.0
+        assert res["follow_ci_hi"] == 1.0
 
 
 class TestJudgeAgreementMetric:
-    def test_no_secondary_judge_means_zero_pairs(self) -> None:
+    def test_no_secondary_judge_is_null_not_zero(self) -> None:
         res = judge_agreement()(_scores_with_judges([(0, None), (6, None)]))
-        assert res["n"] == 0.0
+        assert res["n_pairs"] == 0.0
+        # Null, not 0.0 -- "no second judge" must not read as "total disagreement".
+        assert res["cohens_kappa"] is None
+        assert res["percent_agreement"] is None
 
     def test_kappa_and_agreement_with_secondary(self) -> None:
         res = judge_agreement()(_scores_with_judges([(0, 0), (6, 6), (0, 0)]))
-        assert res["n"] == 3.0
+        assert res["n_pairs"] == 3.0
         assert res["percent_agreement"] == 1.0
         assert res["cohens_kappa"] == 1.0
 
