@@ -26,7 +26,9 @@ dependencies = [
 "Issue Tracker" = "https://github.com/mkzung/inspect-evals-do-not-answer/issues"
 "Paper" = "https://arxiv.org/abs/2308.13387"
 
-# Register the package so `inspect eval do_not_answer/do_not_answer` resolves.
+# Register the package under the inspect_ai entry-point group so tooling can
+# discover it as an eval package after install. Tasks are invoked by file path
+# (e.g. `inspect eval src/do_not_answer/do_not_answer.py`), which always works.
 [project.entry-points.inspect_ai]
 do_not_answer = "do_not_answer"
 
