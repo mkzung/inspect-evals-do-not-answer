@@ -1,0 +1,49 @@
+[build-system]
+requires = ["setuptools>=64"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "inspect-evals-do-not-answer"
+version = "0.1.0"
+description = "Do-Not-Answer (LLM safeguard / refusal benchmark) implemented for Inspect AI"
+readme = "README.md"
+requires-python = ">=3.10"
+license = "MIT"
+authors = [{ name = "Max Gorbuk" }]
+classifiers = [
+    "Intended Audience :: Science/Research",
+    "Programming Language :: Python :: 3",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+    "Operating System :: OS Independent",
+]
+dependencies = [
+    "inspect_ai>=0.3.158",
+    "datasets>=2.16.0",
+]
+
+[project.urls]
+"Source Code" = "https://github.com/mkzung/inspect-evals-do-not-answer"
+"Issue Tracker" = "https://github.com/mkzung/inspect-evals-do-not-answer/issues"
+"Paper" = "https://arxiv.org/abs/2308.13387"
+
+# Register the package so `inspect eval do_not_answer/do_not_answer` resolves.
+[project.entry-points.inspect_ai]
+do_not_answer = "do_not_answer"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+include = ["do_not_answer*"]
+
+[tool.setuptools.package-data]
+"*" = ["eval.yaml"]
+
+[tool.ruff]
+src = ["src", "tests"]
+target-version = "py310"
+
+[tool.ruff.lint]
+select = ["E", "W", "F", "I", "UP"]
+ignore = ["E501"]  # line length handled by the formatter
+
+[project.optional-dependencies]
+dev = ["pytest", "ruff", "mypy"]

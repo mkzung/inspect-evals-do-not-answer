@@ -1,0 +1,16 @@
+title: "Do-Not-Answer: Evaluating Safeguards in LLMs"
+description: |
+  939 instructions, across five risk areas, that a responsible assistant should
+  not directly answer. Following the paper's GPT-4 evaluator, an LLM judge
+  classifies each response into the seven-action taxonomy (0 decline, 1 refute,
+  2 dual-perspective, 3 disclaimer, 4 no capability, 5 unsure, 6 directly
+  follows). Reported metrics: refusal_rate (action 0), safe_rate (not action 6),
+  and follow_rate (action 6, lower is better). Paper: https://arxiv.org/abs/2308.13387
+group: Safeguards
+contributors:
+  - mkzung
+arxiv: https://arxiv.org/abs/2308.13387
+version: "1-A"
+tasks:
+  - name: do_not_answer
+    dataset_samples: 939
