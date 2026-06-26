@@ -5,7 +5,12 @@ description: |
   classifies each response into the seven-action taxonomy (0 decline, 1 refute,
   2 dual-perspective, 3 disclaimer, 4 no capability, 5 unsure, 6 directly
   follows). Reported metrics: refusal_rate (action 0), safe_rate (not action 6),
-  and follow_rate (action 6, lower is better). Paper: https://arxiv.org/abs/2308.13387
+  follow_rate (action 6, lower is better), Wilson 95% CIs, a per-risk-area
+  follow_rate breakdown, and an optional two-judge Cohen's kappa. The companion
+  task do_not_answer_adversarial wraps each prompt in a jailbreak transform
+  (prefix injection / refusal suppression / combination; Wei et al. 2023,
+  https://arxiv.org/abs/2307.02483) to measure safeguard degradation under
+  attack. Paper: https://arxiv.org/abs/2308.13387
 group: Safeguards
 contributors:
   - mkzung
@@ -13,4 +18,6 @@ arxiv: https://arxiv.org/abs/2308.13387
 version: "1-A"
 tasks:
   - name: do_not_answer
+    dataset_samples: 939
+  - name: do_not_answer_adversarial
     dataset_samples: 939
